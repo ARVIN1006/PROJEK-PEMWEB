@@ -1,0 +1,31 @@
+#
+# CodeIgniter 4 .htaccess file.
+#
+# This file is a modified version of the web.config file from the
+# CodeIgniter 4 repository.
+#
+# Environment
+# Set CI_ENVIRONMENT to 'development' to display errors
+# Set to 'production' to hide errors
+SetEnv CI_ENVIRONMENT development
+
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    RewriteEngine On
+
+    # Ensure authorization headers are passed to CodeIgniter
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect non-index.php requests to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    <IfModule mod_alias.c>
+        # When mod_rewrite is not available, redirect 404's to index.php
+        ErrorDocument 404 /index.php
+    </IfModule>
+</IfModule>
