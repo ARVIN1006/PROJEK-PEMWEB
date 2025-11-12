@@ -13,7 +13,8 @@ unset($_SESSION['errors']); // Hapus error setelah ditampilkan
     <title>Login - Dapoyumya</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <link rel="stylesheet" href="http://localhost/codeigniter4/public/css/style.css">
+    <link rel="stylesheet" href="<?= base_url('adminlte/dist/css/style.css') ?>">
+
 </head>
 
 <body>

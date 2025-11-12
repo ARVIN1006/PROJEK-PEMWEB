@@ -14,7 +14,8 @@ if (isset($_SESSION['errors'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Dapoyumya</title>
 
-    <link rel="stylesheet" href="http://localhost/codeigniter4/public/css/style.css">
+    <link rel="stylesheet" href="<?= base_url('adminlte/dist/css/style.css') ?>">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
