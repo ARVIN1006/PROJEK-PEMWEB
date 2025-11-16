@@ -44,32 +44,42 @@ class Pelanggan extends BaseController
      */
     public function store()
     {
-        // Aturan validasi
-        $rules = $this->pelangganModel->getValidationRules([
-            'password' => 'required|min_length[6]' // Wajibkan password saat buat baru
-        ]);
+        // Gunakan semua aturan validasi dari Model yang sudah diperbarui
+        $rules = $this->pelangganModel->getValidationRules();
         
         if (!$this->validate($rules)) {
-            // Jika validasi gagal, kembalikan ke form create dengan pesan error
             return redirect()->back()->withInput()->with('validation', $this->validator);
         }
 
-        // Ambil data dari form
+        // Ambil data dari form (Hanya field yang ada di form yang diambil)
         $data = [
             'nama_pelanggan' => $this->request->getPost('nama_pelanggan'),
             'no_hp'          => $this->request->getPost('no_hp'),
             'alamat'         => $this->request->getPost('alamat'),
-            'username'       => $this->request->getPost('username'),
-            'email'          => $this->request->getPost('email'),
-            'password'       => $this->request->getPost('password'),
+            // username, email, dan password secara eksplisit tidak diambil/disubmit
         ];
+        
+        // Catatan: Karena field username/email/password tidak dikirim dari form,
+        // Model akan menganggapnya kosong. Jika di DB Anda masih NOT NULL,
+        // Anda harus mengubah DB atau mengisi nilai default di sini.
+        // Saya TIDAK mengisi nilai default agar DB Error muncul jika ada masalah.
 
-        // Simpan data (Model akan otomatis hash password via callback)
+        // Simpan data
         if ($this->pelangganModel->save($data)) {
             session()->setFlashdata('success', 'Data pelanggan berhasil ditambahkan.');
             return redirect()->to('/pelanggan');
         } else {
-            session()->setFlashdata('error', 'Gagal menambahkan data pelanggan.');
+            // Penanganan Error Model/Database
+            $db_errors = $this->pelangganModel->errors();
+            $error_message = 'Gagal menambahkan data pelanggan.';
+
+            if (!empty($db_errors)) {
+                $error_message .= ' (Detail: ' . implode(', ', $db_errors) . ')';
+            } else {
+                $error_message .= ' (Kesalahan Database, cek log)';
+            }
+
+            session()->setFlashdata('error', $error_message);
             return redirect()->back()->withInput();
         }
     }
@@ -97,41 +107,37 @@ class Pelanggan extends BaseController
      */
     public function update($id)
     {
-        // Dapatkan data lama untuk aturan is_unique
-        $oldData = $this->pelangganModel->find($id);
-        
-        // Aturan validasi
-        // 'pelanggan_id' digunakan untuk memberitahu aturan is_unique agar mengabaikan ID saat ini
-        $rules = $this->pelangganModel->getValidationRules([
-            'pelanggan_id' => $id 
-        ]);
+        // Gunakan semua aturan validasi dari Model yang sudah diperbarui
+        $rules = $this->pelangganModel->getValidationRules();
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('validation', $this->validator);
         }
 
-        // Ambil data dari form
+        // Ambil data dari form (Hanya field yang ada di form yang diambil)
         $data = [
             'nama_pelanggan' => $this->request->getPost('nama_pelanggan'),
             'no_hp'          => $this->request->getPost('no_hp'),
             'alamat'         => $this->request->getPost('alamat'),
-            'username'       => $this->request->getPost('username'),
-            'email'          => $this->request->getPost('email'),
+            // username, email, dan password secara eksplisit tidak diambil/disubmit
         ];
-
-        // Cek apakah password diisi
-        $password = $this->request->getPost('password');
-        if (!empty($password)) {
-            $data['password'] = $password; // Model akan hash otomatis
-        }
-        // Jika password kosong, model akan otomatis mengabaikannya (lihat callback)
 
         // Update data
         if ($this->pelangganModel->update($id, $data)) {
             session()->setFlashdata('success', 'Data pelanggan berhasil diperbarui.');
             return redirect()->to('/pelanggan');
         } else {
-            session()->setFlashdata('error', 'Gagal memperbarui data pelanggan.');
+            // Penanganan Error Model/Database
+            $db_errors = $this->pelangganModel->errors();
+            $error_message = 'Gagal memperbarui data pelanggan.';
+
+            if (!empty($db_errors)) {
+                $error_message .= ' (Detail: ' . implode(', ', $db_errors) . ')';
+            } else {
+                $error_message .= ' (Kesalahan Database, cek log)';
+            }
+            
+            session()->setFlashdata('error', $error_message);
             return redirect()->back()->withInput();
         }
     }
@@ -151,7 +157,7 @@ class Pelanggan extends BaseController
         if ($this->pelangganModel->delete($id)) {
             session()->setFlashdata('success', 'Data pelanggan berhasil dihapus.');
         } else {
-            session()->setFlashdata('error', 'Gagal menghapus data pelanggan.');
+            session()->setFlashdata('error', 'Gagal menghapus data pelanggan. (Kesalahan Database, cek log)');
         }
         
         return redirect()->to('/pelanggan');

@@ -62,48 +62,6 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username <span
-                                        class="text-danger">*</span></label>
-                                <input type="text"
-                                    class="form-control <?= $validation?->hasError('username') ? 'is-invalid' : '' ?>"
-                                    id="username" name="username" value="<?= old('username', $pelanggan['username']) ?>"
-                                    required>
-
-                                <?php if ($validation?->hasError('username')): ?>
-                                    <div class="invalid-feedback">
-                                        <?= $validation->getError('username') ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email"
-                                    class="form-control <?= $validation?->hasError('email') ? 'is-invalid' : '' ?>"
-                                    id="email" name="email" value="<?= old('email', $pelanggan['email']) ?>" required>
-
-                                <?php if ($validation?->hasError('email')): ?>
-                                    <div class="invalid-feedback">
-                                        <?= $validation->getError('email') ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password Baru</label>
-                                <input type="password"
-                                    class="form-control <?= $validation?->hasError('password') ? 'is-invalid' : '' ?>"
-                                    id="password" name="password">
-                                <div class="form-text">Kosongkan jika tidak ingin mengubah password.</div>
-
-                                <?php if ($validation?->hasError('password')): ?>
-                                    <div class="invalid-feedback">
-                                        <?= $validation->getError('password') ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-
-                            <div class="mb-3">
                                 <label for="no_hp" class="form-label">Nomor HP</label>
                                 <input type="tel"
                                     class="form-control <?= $validation?->hasError('no_hp') ? 'is-invalid' : '' ?>"

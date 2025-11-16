@@ -16,9 +16,9 @@ class PelangganModel extends Model
         'nama_pelanggan',
         'no_hp',
         'alamat',
-        'username',
-        'email',
-        'password',
+        'username', // Tetap di allowed fields
+        'email',    // Tetap di allowed fields
+        'password', // Tetap di allowed fields
         // 'total_pembelian' sengaja tidak dimasukkan, 
         // karena seharusnya di-update oleh trigger atau dari transaksi penjualan
     ];
@@ -26,24 +26,17 @@ class PelangganModel extends Model
     // Dates
     protected $useTimestamps = false; // Tidak ada created_at/updated_at di tabel pelanggan
 
-    // Validation
+    // PERUBAHAN: Menjadikan username, email, dan password sebagai field opsional.
     protected $validationRules      = [
         'nama_pelanggan' => 'required|string|max_length[100]',
         'no_hp'          => 'permit_empty|string|max_length[20]',
         'alamat'         => 'permit_empty|string|max_length[255]',
-        'username'       => 'required|string|max_length[255]|is_unique[pelanggan.username,pelanggan_id,{pelanggan_id}]',
-        'email'          => 'required|string|max_length[100]|valid_email|is_unique[pelanggan.email,pelanggan_id,{pelanggan_id}]',
+        'username'       => 'permit_empty|string|max_length[255]', // DIUBAH: Hapus 'required' dan 'is_unique'
+        'email'          => 'permit_empty|string|max_length[100]|valid_email', // DIUBAH: Hapus 'required' dan 'is_unique'
         'password'       => 'permit_empty|min_length[6]', // Hanya divalidasi jika diisi
     ];
-    protected $validationMessages   = [
-        'username' => [
-            'is_unique' => 'Username ini sudah digunakan.',
-        ],
-        'email' => [
-            'is_unique' => 'Email ini sudah terdaftar.',
-            'valid_email' => 'Format email tidak valid.'
-        ],
-    ];
+    // PERUBAHAN: Pesan error keunikan dihapus karena aturan keunikan dihapus
+    protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 
@@ -57,11 +50,12 @@ class PelangganModel extends Model
      */
     protected function hashPassword(array $data)
     {
-        // Hanya hash jika field password ada dan tidak kosong
+        // Logic ini tetap bekerja. Jika 'password' tidak ada di $data (karena tidak ada di form),
+        // maka unset akan dijalankan sehingga tidak menimpa field di DB dengan nilai kosong.
         if (isset($data['data']['password']) && !empty($data['data']['password'])) {
             $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
         } else {
-            // Jika password kosong (misal saat update tapi tidak ganti password),
+            // Jika password kosong atau tidak disubmit dari form (karena dihilangkan),
             // hapus field password dari data array agar tidak menimpa password lama
             unset($data['data']['password']);
         }
