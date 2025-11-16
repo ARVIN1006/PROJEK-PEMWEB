@@ -18,7 +18,7 @@ class Laporan extends BaseController
         // Load model Anda di constructor
         $this->pemasokModel = new PemasokModel();
         $this->pembelianModel = new PembelianModel();
-        $this->bahanBakuModel = new BahanBakuModel(); // INICIALISASI MODEL BAHAN BAKU
+        $this->bahanBakuModel = new BahanBakuModel();
     }
 
     // FUNGSI index() Anda akan berjalan saat URL laporan/pembelian diakses
@@ -28,7 +28,7 @@ class Laporan extends BaseController
         $data = [
             'pemasok' => $this->pemasokModel->findAll(),
             'pembelian' => $this->pembelianModel->findAll(),
-            'bahan_baku' => $this->bahanBakuModel->findAll() // AMBIL DATA BAHAN BAKU
+            'bahan_baku' => $this->bahanBakuModel->findAll() 
             // Catatan: Untuk data pembelian, Anda mungkin perlu
             // JOIN dengan tabel pemasok untuk mendapatkan nama pemasok
         ];

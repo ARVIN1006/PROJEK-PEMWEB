@@ -27,8 +27,8 @@
                     <div class="card-header">
                         <h3 class="card-title">Tabel <?= $title ?></h3>
                         <div class="card-tools">
-                             <a href="<?= base_url('pelanggan/create') ?>" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus"></i> Tambah Pelanggan
+                             <a href="<?= base_url('pengeluaran/create') ?>" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Tambah Pengeluaran
                             </a>
                         </div>
                     </div>
@@ -45,33 +45,31 @@
                         <?php endif; ?>
 
                         <div class="table-responsive">
-                            <table id="tabel-pelanggan" class="table table-bordered table-striped">
+                            <table id="tabel-pengeluaran" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Nama Pelanggan</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>No. HP</th>
-                                        <th>Alamat</th>
+                                        <th>Tanggal</th>
+                                        <th>Kategori</th>
+                                        <th>Keterangan</th>
+                                        <th>Jumlah</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $no = 1; ?>
-                                    <?php foreach ($pelanggan as $p) : ?>
+                                    <?php foreach ($pengeluaran as $p) : ?>
                                         <tr>
                                             <td><?= $no++ ?></td>
-                                            <td><?= esc($p['nama_pelanggan']) ?></td>
-                                            <td><?= esc($p['username']) ?></td>
-                                            <td><?= esc($p['email']) ?></td>
-                                            <td><?= esc($p['no_hp']) ?></td>
-                                            <td><?= esc($p['alamat']) ?></td>
+                                            <td><?= date('d M Y', strtotime($p['tanggal'])) ?></td>
+                                            <td><?= esc($p['kategori_pengeluaran']) ?></td>
+                                            <td><?= esc($p['keterangan']) ?></td>
+                                            <td>Rp <?= number_format($p['jumlah'], 0, ',', '.') ?></td>
                                             <td>
-                                                <a href="<?= base_url('pelanggan/edit/' . $p['pelanggan_id']) ?>" class="btn btn-warning btn-sm" title="Edit">
+                                                <a href="<?= base_url('pengeluaran/edit/' . $p['pengeluaran_id']) ?>" class="btn btn-warning btn-sm" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="<?= base_url('pelanggan/delete/' . $p['pelanggan_id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')" title="Hapus">
+                                                <a href="<?= base_url('pengeluaran/delete/' . $p['pengeluaran_id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')" title="Hapus">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </td>

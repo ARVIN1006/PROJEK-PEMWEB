@@ -22,9 +22,6 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     // Dashboard (Bisa diakses Owner & Admin)
     $routes->get('dashboard', 'Dashboard::index');
 
-    // // --- Rute untuk Modul Produk coba diawal progress pemweb---
-    // ... (Komentar Anda dipertahankan) ...
-
     // === GRUP 1: MASTER DATA (Bisa diakses Owner & Admin) ===
     $routes->get('produk', 'Produk::index');
 
@@ -36,13 +33,28 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('delete/(:num)', 'Pemasok::delete/$1');   // Menghapus data
     });
 
-    $routes->get('pelanggan', 'Pelanggan::index');
+    // --- Rute CRUD Pelanggan ---
+    $routes->group('pelanggan', static function ($routes) {
+        $routes->get('/', 'Pelanggan::index');
+        $routes->get('create', 'Pelanggan::create');         // Form tambah
+        $routes->post('store', 'Pelanggan::store');          // Proses simpan
+        $routes->get('edit/(:num)', 'Pelanggan::edit/$1');   // Form edit
+        $routes->post('update/(:num)', 'Pelanggan::update/$1');// Proses update
+        $routes->get('delete/(:num)', 'Pelanggan::delete/$1');// Proses hapus
+    });
+    
     $routes->get('aset', 'Aset::index');
 
     // === GRUP 2: TRANSAKSI (Bisa diakses Owner & Admin) ===
     $routes->group('penjualan', static function ($routes) {
         $routes->get('tambah', 'Penjualan::tambah');
         // $routes->post('simpan', 'Penjualan::simpan'); 
+    });
+
+    // --- Rute Status Pembayaran (Piutang) ---
+    $routes->group('piutang', static function ($routes) {
+        $routes->get('/', 'Piutang::index');
+        $routes->get('update-status/(:num)', 'Piutang::updateStatus/$1'); // Update status bayar
     });
 
     $routes->group('pembelian', static function ($routes) {
@@ -62,9 +74,14 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('delete/(:num)', 'BahanBaku::delete/$1');
     });
 
+    // --- Rute CRUD Pengeluaran ---
     $routes->group('pengeluaran', static function ($routes) {
-        $routes->get('tambah', 'Pengeluaran::tambah');
-        // $routes->post('simpan', 'Pengeluaran::simpan'); 
+        $routes->get('/', 'Pengeluaran::index'); // Halaman utama pengeluaran
+        $routes->get('create', 'Pengeluaran::create'); // Form tambah (menggantikan 'tambah')
+        $routes->post('store', 'Pengeluaran::store');  // Proses simpan
+        $routes->get('edit/(:num)', 'Pengeluaran::edit/$1'); // Form edit
+        $routes->post('update/(:num)', 'Pengeluaran::update/$1'); // Proses update
+        $routes->get('delete/(:num)', 'Pengeluaran::delete/$1'); // Proses hapus
     });
 
     // === GRUP 3: LAPORAN (HANYA OWNER - Filter 'owner') ===
@@ -72,12 +89,17 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->group('laporan', ['namespace' => 'App\Controllers', 'filter' => 'owner'], static function ($routes) {
         $routes->get('laba_rugi', 'Laporan::labaRugi');
         $routes->get('posisi_keuangan', 'Laporan::posisiKeuangan');
-        $routes->get('piutang', 'Laporan::piutang');
+        
+        // Ubah rute 'piutang' agar mengarah ke controller Piutang (tapi tetap di grup Laporan)
+        // Jika Anda ingin Laporan Piutang khusus, Anda bisa buat Laporan::piutang
+        // Tapi jika ingin halaman manajemennya, arahkan ke Piutang::index
+        // Saya asumsikan Anda ingin halaman manajemen, jadi saya akan pindahkan
+        // $routes->get('piutang', 'Laporan::piutang'); 
+        // $routes->get('piutang', 'Piutang::index'); // Dipindahkan ke grup auth umum
+        
         $routes->get('utang', 'Laporan::utang');
         $routes->get('penjualan', 'Laporan::penjualan');
         $routes->get('pembelian', 'Laporan::pembelian');
-        // Catatan: Rute 'jurnal' dan 'bukuBesar' ada di sidebar Anda
-        // tapi tidak ada di file Routes.php Anda. 
-        // Anda mungkin perlu menambahkannya di sini jika diperlukan.
     });
+
 }); // <-- Akhir dari grup filter 'auth'

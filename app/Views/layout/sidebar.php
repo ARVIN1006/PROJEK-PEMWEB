@@ -92,7 +92,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= base_url('pengeluaran/tambah') ?>" class="nav-link">
+                            <a href="<?= base_url('pengeluaran') ?>" class="nav-link">
                                 <i class="bi bi-circle nav-icon"></i>
                                 <p>Pengeluaran</p>
                             </a>
@@ -129,7 +129,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?= base_url('laporan/piutang') ?>" class="nav-link">
+                                <a href="<?= base_url('piutang') ?>" class="nav-link">
                                     <i class="bi bi-circle nav-icon"></i>
                                     <p>Piutang</p>
                                 </a>
